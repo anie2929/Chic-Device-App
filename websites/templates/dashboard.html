@@ -1,0 +1,688 @@
+<!-- Chic Web Application 2023 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="icon" href="https://example.com/path_to_logo_image_file.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Coiny&family=Nunito:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #fff url(https://static01.nyt.com/images/2023/03/03/multimedia/00dc-birdflu-01-bvmw/00dc-birdflu-01-bvmw-superJumbo-v2.jpg) center center/cover no-repeat;
+    }
+
+    .switch {
+ position: relative;
+ display: inline-block;
+ width: 120px;
+ height: 34px;
+}
+
+.switch input {
+ display: none;
+}
+
+.slider {
+ position: absolute;
+ cursor: pointer;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-color: #3C3C3C;
+ -webkit-transition: .4s;
+ transition: .4s;
+ border-radius: 34px;
+}
+
+.slider:before {
+ position: absolute;
+ content: "";
+ height: 26px;
+ width: 26px;
+ left: 4px;
+ bottom: 4px;
+ background-color: white;
+ -webkit-transition: .4s;
+ transition: .4s;
+ border-radius: 50%;
+}
+
+input:checked + .slider {
+ background-color: #ca3426;
+}
+
+input:focus + .slider {
+ box-shadow: 0 0 1px #f5691e;
+}
+
+input:checked + .slider:before {
+ -webkit-transform: translateX(26px);
+ -ms-transform: translateX(26px);
+ transform: translateX(85px);
+}
+
+/*------ ADDED CSS ---------*/
+.slider:after {
+ content: 'OFF';
+ color: white;
+ display: block;
+ position: absolute;
+ transform: translate(-50%,-50%);
+ top: 50%;
+ left: 50%;
+ font-size: 15px;
+ font-family: Verdana, sans-serif;
+}
+
+input:checked + .slider:after {
+ content: 'ON';
+}
+
+/*--------- END --------*/
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .title {
+   text-transform: uppercase;
+  background-image: linear-gradient(
+    -225deg,
+    #ad5106 0%,
+    #dfe214 29%,
+    #e6471f 67%,
+    #fff800 100%
+  );
+  background-size: auto auto;
+  background-clip: border-box;
+  background-size: 79% auto;
+  color: #fff;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textclip 2s linear infinite;
+  display: center;
+      font-size: 20px;
+}
+
+@keyframes textclip {
+  to {
+    background-position: 500% center;
+  }
+}
+
+    .elevated-container {
+      background-color: rgba(255, 255, 255, 0.726);
+      border-radius: 10px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .waveform-container {
+      width: 100%;
+    }
+
+    .audio-analysis-container {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .container h3 {
+    margin-top: 0;
+}
+    .audio-analysis-subcontainer {
+      width: 48%;
+    }
+
+    .history-logs-container {
+      width: 200%;
+    }
+
+    .history-logs-table {
+      width: 100%;
+    }
+
+    .cause-mild-container {
+      width: 100%;
+    }
+
+    .emergency-contacts-container {
+      width: 100%;
+    }
+
+    .reminders-container {
+      width: 100%;
+    }
+    .field {
+  padding: 20px;
+  background-color: #f9f9f9ad;
+  border: 1px solid #E0E0E0;
+  border-radius: 5px;
+}
+
+.field-row {
+  margin-bottom: 10px;
+}
+
+.field-label {
+  font-weight: bold;
+  font-style: normal;
+  font-family: 'Nunito', sans-serif;
+}
+
+.field-value {
+  margin-left: 10px;
+}
+.audio-visualizations-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .visualization-container {
+      width: 30%;
+      text-align: center;
+    }
+
+    .visualization-container canvas {
+      width: 100%;
+      height: 200px;
+      border-radius: 5px;
+    }
+    .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1px;
+  }
+
+  .logo {
+    width: 150px;
+    height: auto;
+  }
+
+  .animate-charcter {
+    text-transform: lowercase;
+    background-image: linear-gradient(-225deg, #ffec00 10%, #bc4c1c 19%, #ffe400 67%, #e02727 120%);
+    background-size: auto auto;
+    background-clip: border-box;
+    background-size: 79% auto;
+    color: #fff;
+    background-clip: text;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textclip 2s linear infinite;
+    display: inline-block;
+    font-size: 50px;
+    font-family: "Coiny", cursive;
+    text-align: center;
+    margin-top: 0;
+  }
+
+@keyframes textclip {
+  to {
+    background-position: 500% center;
+  }
+}
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 0 10px;
+  transition: 0.3s;
+}
+
+.social-button:hover {
+  background-color: #f2f2f2;
+  box-shadow: 0px 0px 6px 3px #00000027;
+}
+
+.social-buttons svg {
+  transition: 0.3s;
+  height: 20px;
+}
+
+.facebook {
+  background-color: #3b5998;
+}
+
+.facebook svg {
+  fill: #f2f2f2;
+}
+
+.facebook:hover svg {
+  fill: #3b5998;
+}
+
+.github {
+  background-color: #333;
+}
+
+.github svg {
+  width: 25px;
+  height: 25px;
+  fill: #f2f2f2;
+}
+
+.github:hover svg {
+  fill: #333;
+}
+
+.linkedin {
+  background-color: #0077b5;
+}
+
+.linkedin svg {
+  fill: #f2f2f2;
+}
+
+.linkedin:hover svg {
+  fill: #0077b5;
+}
+
+.instagram {
+  background-color: #c13584;
+}
+
+.instagram svg {
+  fill: #f2f2f2;
+}
+
+.instagram:hover svg {
+  fill: #c13584;
+}
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <div class="logo-container">
+            <img class="logo" src="{{ url_for('static', filename='chic_logo.png', _external=True) }}" alt="Logo">
+          </div>
+          <h3 class="animate-charcter" style="margin: 0; padding: 0;">Chic Device App</h3>
+          <h3 class="subtitle" style="margin: 0; padding: 0; font-size: 23px; color: #FAE02D; font-family: Nunito;">Hear their Cries, Save their Lives!</h3>
+      </div>
+    </div>
+  </nav>
+  
+
+  <div class="container">
+    <div style="display: flex; align-items: center;">
+        <div>
+            <p style="color: #FAE02D; margin-right: 10px; font-size: 20px;">Network Access: <span class="field-value">{{ network_ssid }}</span></p>
+        <div style="display: flex; align-items: center;">
+            <p style="color: #FAE02D; margin-right: 10px; font-size: 20px;">Current Date & Time: <span id="currentDateTime" style="color: #FAE02D;"></span></p>
+        </div>
+        </div>
+        <div style="text-align: right; margin-left: auto;">
+          <p style="color: #FAE02D; display: inline-block; vertical-align: middle; margin-right: 10px; font-size: 20px;">Device Status:</p>
+          <label class="switch" style="display: inline-block; vertical-align: middle; margin-bottom: 10px;">
+            <input type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+    </div>
+    
+    <script>
+      // Function to update the current date and time
+      function updateDateTime() {
+        var currentDateTimeElement = document.getElementById("currentDateTime");
+        var currentDate = new Date().toLocaleDateString();
+        var currentTime = new Date().toLocaleTimeString();
+        currentDateTimeElement.textContent = currentDate + " " + currentTime;
+      }
+    
+      // Update the date and time initially
+      updateDateTime();
+    
+      // Update the date and time every second
+      setInterval(updateDateTime, 1000);
+    </script>
+    
+
+    <div class="elevated-container waveform-container">
+      <!-- Add a button to start audio processing -->
+      <canvas id="waveformCanvas"></canvas>
+      <div class="col-md-12 text-center">
+        <p>Real-time Waveform</p>
+        <button class="btn btn-danger btn-sm" onclick="startAudioProcessing()">Start Audio Processing</button>
+        <button class="btn btn-danger btn-sm" onclick="endAudioProcessing()">End Audio Processing</button>
+
+      </div>
+    </div>
+    
+    
+    
+
+    <div class="audio-analysis-container">
+        <div class="elevated-container audio-analysis-subcontainer">
+          <div class="field">
+            <div class="text-center">
+              <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">Real-Time System Report</h3>
+         <p>Subtitle here</p>
+            </div>
+            <hr>
+            <div class="field-row">
+              <span class="field-label">Current Chicken Status:</span>
+              <span class="field-value" id="chickenStatus">Extremely Distressed</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Frequency:</span>
+              <span class="field-value" id="frequency"></span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Amplitude:</span>
+              <span class="field-value" id="amplitude"></span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Text Message Status:</span>
+              <span class="field-value" id="textMessageStatus">Not Sent</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Current Registered Phone Number:</span>
+              <span class="field-value" id="registeredPhoneNumber">{{ registered_phone_number }}</span>
+          </div>                         
+            <button class="btn btn-danger btn-sm" onclick="window.location.href='{{ url_for('register') }}'">Register New Phone Number</button>            
+          </div>
+        </div>
+      
+
+        <div class="elevated-container audio-analysis-subcontainer">
+              <div class="field text-center">
+              <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">Real-Time Audio Analysis</h3>
+            <p>Subtitle here</p>  
+            <hr>
+            
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <p>Mel-Spectrogram graph here</p>
+                <!-- Add the mel-spectrogram visualization code here -->
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <p>Chromagram graph here</p>
+                <!-- Add the chromagram visualization code here -->
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <p>Spectral Display graph here</p>
+                <!-- Add the spectral display visualization code here -->
+              </div>
+              <hr>
+            </div>
+          </div>
+          </div>
+        </div>
+          
+<hr>
+        <div class="row">
+          <div class="elevated-container history-logs-container">
+            <div class="field text-center">
+                <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">History Logs</h3>
+              <p>This section serves as a valuable reference for monitoring and analyzing distress situations over time, aiding in better understanding and response to user needs. The user can refer to this log to review previous events and track patterns or trends in distress signals.</p>
+              <hr>
+              <table class="history-logs-table table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Distress Level</th>
+                    <th>Duration</th>
+                    <th>Notification Sent to</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for log in history_logs[:5] %}  {# Only display the first 5 logs #}
+                  <tr>
+                    <td>{{ log.date }}</td>
+                    <td>{{ log.time }}</td>
+                    <td>{{ log.distress_level }}</td>
+                    <td>{{ log.duration }}</td>
+                    <td>{{ log.phone_number }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              <div class="text-center mt-3">
+                <form action="{{ url_for('history_logs') }}" method="GET" class="text-end">
+                  <button type="submit" class="btn btn-danger btn-sm">View All Logs</button>
+                </form>                
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-6">
+              <div class="elevated-container reminders-container">
+                <div class = "field">
+                <div class="text-center">
+                  <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">Possible Causes of Mild Distress in Chickens</h3>
+               <hr>
+              </div>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec massa sapien. Proin sed rutrum magna. Aliquam eleifend augue sed felis consequat, id consequat lacus finibus. Integer vitae gravida nisi. Nulla id lorem at odio laoreet mattis. Mauris bibendum quam sed mauris tincidunt, ac fringilla est dapibus. Nulla facilisi. Sed iaculis rutrum augue, id semper felis faucibus a. Etiam fermentum augue nec diam tincidunt, id consequat libero bibendum. Suspendisse nec sagittis est. Fusce convallis finibus erat, ac vestibulum ligula lacinia ac. Sed volutpat, enim vitae egestas consequat, purus nibh tristique neque, a bibendum nulla orci sed odio.</p>
+                <ul>
+                  <li>Cause 1</li>
+                  <li>Cause 2</li>
+                  <li>Cause 3</li>
+                </ul>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="elevated-container reminders-container">
+                <div class="field text-center">
+                  <div class="text-center">
+                  <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">Tips to Alleviate Mild Distress in Chickens</h3>
+                <hr>
+                </div>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec massa sapien. Proin sed rutrum magna. Aliquam eleifend augue sed felis consequat, id consequat lacus finibus. Integer vitae gravida nisi. Nulla id lorem at odio laoreet mattis. Mauris bibendum quam sed mauris tincidunt, ac fringilla est dapibus. Nulla facilisi. Sed iaculis rutrum augue, id semper felis faucibus a. Etiam fermentum augue nec diam tincidunt, id consequat libero bibendum. Suspendisse nec sagittis est. Fusce convallis finibus erat, ac vestibulum ligula lacinia ac. Sed volutpat, enim vitae egestas consequat, purus nibh tristique neque, a bibendum nulla orci sed odio.</p>
+                <ul>
+                  <li>Tip 1</li>
+                  <li>Tip 2</li>
+                  <li>Tip 3</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+<hr>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="elevated-container reminders-container">
+                <div class="field text-center">
+                  <div class="text-center">
+                  <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">Possible Causes of Extreme Distress in Chickens</h3>
+                <hr>
+                </div>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec massa sapien. Proin sed rutrum magna. Aliquam eleifend augue sed felis consequat, id consequat lacus finibus. Integer vitae gravida nisi. Nulla id lorem at odio laoreet mattis. Mauris bibendum quam sed mauris tincidunt, ac fringilla est dapibus. Nulla facilisi. Sed iaculis rutrum augue, id semper felis faucibus a. Etiam fermentum augue nec diam tincidunt, id consequat libero bibendum. Suspendisse nec sagittis est. Fusce convallis finibus erat, ac vestibulum ligula lacinia ac. Sed volutpat, enim vitae egestas consequat, purus nibh tristique neque, a bibendum nulla orci sed odio.</p>
+                <ul>
+                  <li>Cause 1</li>
+                  <li>Cause 2</li>
+                  <li>Cause 3</li>
+                </ul>
+              </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="elevated-container reminders-container">
+                <div class="field text-center">
+                  <div class="text-center">
+                  <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">Tips to Alleviate Extreme Distress in Chickens</h3>
+                <hr>
+                </div>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec massa sapien. Proin sed rutrum magna. Aliquam eleifend augue sed felis consequat, id consequat lacus finibus. Integer vitae gravida nisi. Nulla id lorem at odio laoreet mattis. Mauris bibendum quam sed mauris tincidunt, ac fringilla est dapibus. Nulla facilisi. Sed iaculis rutrum augue, id semper felis faucibus a. Etiam fermentum augue nec diam tincidunt, id consequat libero bibendum. Suspendisse nec sagittis est. Fusce convallis finibus erat, ac vestibulum ligula lacinia ac. Sed volutpat, enim vitae egestas consequat, purus nibh tristique neque, a bibendum nulla orci sed odio.</p>
+                <ul>
+                  <li>Tip 1</li>
+                  <li>Tip 2</li>
+                  <li>Tip 3</li>
+                </ul>
+              </div>
+              </div>
+            </div>
+ </div>
+ </div>
+
+  
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+ 
+ 
+ <script>
+  var audioData = [];
+
+  function updateWaveformCanvas() {
+      var canvas = document.getElementById('waveformCanvas');
+      var ctx = canvas.getContext('2d');
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      var waveform = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: Array(audioData.length).fill(''),
+              datasets: [{
+                  data: audioData,
+                  borderWidth: 1,
+                  borderColor: 'blue',
+                  backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                  tension: 0.4,
+              }]
+          },
+          options: {
+              responsive: false,
+              scales: {
+                  x: {
+                      display: false,
+                  },
+                  y: {
+                      min: -1,
+                      max: 1,
+                  }
+              }
+          }
+      });
+  }
+
+  function fetchAudioData() {
+      $.getJSON('/get-audio-data', function(data) {
+          audioData = data;
+          updateWaveformCanvas();
+      });
+  }
+
+  setInterval(fetchAudioData, 100);
+</script>
+
+<script>
+  function startAudioProcessing() {
+    fetch('/start-button', { method: 'POST' })
+      .then(response => {
+        if (response.ok) {
+          console.log('Audio processing started');
+        } else {
+          console.error('Failed to start audio processing');
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+  function endAudioProcessing() {
+    fetch('/end-button', { method: 'POST' })
+      .then(response => {
+        if (response.ok) {
+          console.log('Audio processing ended');
+        } else {
+          console.error('Failed to end audio processing');
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+</script>
+
+
+  <footer class="footer">
+    <div class="social-buttons">
+      <a href="#" class="social-button github">
+        <svg class="cf-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 0 19 19"><path d="M9.464 17.178a4.506 4.506 0 0 1-2.013.317 4.29 4.29 0 0 1-2.007-.317.746.746 0 0 1-.277-.587c0-.22-.008-.798-.012-1.567-2.564.557-3.105-1.236-3.105-1.236a2.44 2.44 0 0 0-1.024-1.348c-.836-.572.063-.56.063-.56a1.937 1.937 0 0 1 1.412.95 1.962 1.962 0 0 0 2.682.765 1.971 1.971 0 0 1 .586-1.233c-2.046-.232-4.198-1.023-4.198-4.554a3.566 3.566 0 0 1 .948-2.474 3.313 3.313 0 0 1 .091-2.438s.773-.248 2.534.945a8.727 8.727 0 0 1 4.615 0c1.76-1.193 2.532-.945 2.532-.945a3.31 3.31 0 0 1 .092 2.438 3.562 3.562 0 0 1 .947 2.474c0 3.54-2.155 4.32-4.208 4.548a2.195 2.195 0 0 1 .625 1.706c0 1.232-.011 2.227-.011 2.529a.694.694 0 0 1-.272.587z"></path></svg>
+          </a>
+          <a href="#" class="social-button linkedin">
+            <svg viewBox="0 -2 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Icons" stroke="none" stroke-width="1">
+                <g transform="translate(-702.000000, -265.000000)">
+                    <path d="M746,305 L736.2754,305 L736.2754,290.9384 C736.2754,287.257796 734.754233,284.74515 731.409219,284.74515 C728.850659,284.74515 727.427799,286.440738 726.765522,288.074854 C726.517168,288.661395 726.555974,289.478453 726.555974,290.295511 L726.555974,305 L716.921919,305 C716.921919,305 717.046096,280.091247 716.921919,277.827047 L726.555974,277.827047 L726.555974,282.091631 C727.125118,280.226996 730.203669,277.565794 735.116416,277.565794 C741.21143,277.565794 746,281.474355 746,289.890824 L746,305 L746,305 Z M707.17921,274.428187 L707.117121,274.428187 C704.0127,274.428187 702,272.350964 702,269.717936 C702,267.033681 704.072201,265 707.238711,265 C710.402634,265 712.348071,267.028559 712.41016,269.710252 C712.41016,272.34328 710.402634,274.428187 707.17921,274.428187 L707.17921,274.428187 L707.17921,274.428187 Z M703.109831,277.827047 L711.685795,277.827047 L711.685795,305 L703.109831,305 L703.109831,277.827047 L703.109831,277.827047 Z" id="LinkedIn">
+        </path>
+                </g>
+            </g>
+        </svg>
+      </a>
+      <a href="#" class="social-button facebook">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 310 310" xml:space="preserve">
+    <g id="XMLID_834_">
+      <path id="XMLID_835_" d="M81.703,165.106h33.981V305c0,2.762,2.238,5,5,5h57.616c2.762,0,5-2.238,5-5V165.765h39.064
+        c2.54,0,4.677-1.906,4.967-4.429l5.933-51.502c0.163-1.417-0.286-2.836-1.234-3.899c-0.949-1.064-2.307-1.673-3.732-1.673h-44.996
+        V71.978c0-9.732,5.24-14.667,15.576-14.667c1.473,0,29.42,0,29.42,0c2.762,0,5-2.239,5-5V5.037c0-2.762-2.238-5-5-5h-40.545
+        C187.467,0.023,186.832,0,185.896,0c-7.035,0-31.488,1.381-50.804,19.151c-21.402,19.692-18.427,43.27-17.716,47.358v37.752H81.703
+        c-2.762,0-5,2.238-5,5v50.844C76.703,162.867,78.941,165.106,81.703,165.106z"></path>
+    </g>
+    </svg>
+      </a>
+      <a href="#" class="social-button instagram">
+        <svg width="800px" height="800px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g id="Page-1" stroke="none" stroke-width="1">
+            <g id="Dribbble-Light-Preview" transform="translate(-340.000000, -7439.000000)">
+                <g id="icons" transform="translate(56.000000, 160.000000)">
+                    <path d="M289.869652,7279.12273 C288.241769,7279.19618 286.830805,7279.5942 285.691486,7280.72871 C284.548187,7281.86918 284.155147,7283.28558 284.081514,7284.89653 C284.035742,7285.90201 283.768077,7293.49818 284.544207,7295.49028 C285.067597,7296.83422 286.098457,7297.86749 287.454694,7298.39256 C288.087538,7298.63872 288.809936,7298.80547 289.869652,7298.85411 C298.730467,7299.25511 302.015089,7299.03674 303.400182,7295.49028 C303.645956,7294.859 303.815113,7294.1374 303.86188,7293.08031 C304.26686,7284.19677 303.796207,7282.27117 302.251908,7280.72871 C301.027016,7279.50685 299.5862,7278.67508 289.869652,7279.12273 M289.951245,7297.06748 C288.981083,7297.0238 288.454707,7296.86201 288.103459,7296.72603 C287.219865,7296.3826 286.556174,7295.72155 286.214876,7294.84312 C285.623823,7293.32944 285.819846,7286.14023 285.872583,7284.97693 C285.924325,7283.83745 286.155174,7282.79624 286.959165,7281.99226 C287.954203,7280.99968 289.239792,7280.51332 297.993144,7280.90837 C299.135448,7280.95998 300.179243,7281.19026 300.985224,7281.99226 C301.980262,7282.98483 302.473801,7284.28014 302.071806,7292.99991 C302.028024,7293.96767 301.865833,7294.49274 301.729513,7294.84312 C300.829003,7297.15085 298.757333,7297.47145 289.951245,7297.06748 M298.089663,7283.68956 C298.089663,7284.34665 298.623998,7284.88065 299.283709,7284.88065 C299.943419,7284.88065 300.47875,7284.34665 300.47875,7283.68956 C300.47875,7283.03248 299.943419,7282.49847 299.283709,7282.49847 C298.623998,7282.49847 298.089663,7283.03248 298.089663,7283.68956 M288.862673,7288.98792 C288.862673,7291.80286 291.150266,7294.08479 293.972194,7294.08479 C296.794123,7294.08479 299.081716,7291.80286 299.081716,7288.98792 C299.081716,7286.17298 296.794123,7283.89205 293.972194,7283.89205 C291.150266,7283.89205 288.862673,7286.17298 288.862673,7288.98792 M290.655732,7288.98792 C290.655732,7287.16159 292.140329,7285.67967 293.972194,7285.67967 C295.80406,7285.67967 297.288657,7287.16159 297.288657,7288.98792 C297.288657,7290.81525 295.80406,7292.29716 293.972194,7292.29716 C292.140329,7292.29716 290.655732,7290.81525 290.655732,7288.98792" id="instagram-[#167]">
+    
+    </path>
+                </g>
+            </g>
+        </g>
+    </svg>
+      </a>
+    </div>
+    </div>
+    </div>
+    <div class="container text-center">
+      <div class="row">
+        <div class="col-md-12">
+          <p class="footer-text" style="color: white;">© 2023 Chic Web Application. All rights reserved.</p>
+          <p class="footer-text" style="color: white;">This web application is for research purposes only. "Automated Bioacoustics: Recognition of Chicken Distress Vocalizations"</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+</body>
+
+</html>
