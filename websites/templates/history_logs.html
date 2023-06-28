@@ -140,8 +140,31 @@
           <button type="submit" class="btn btn-danger btn-primary">Clear All Logs</button>
         </form>
       </div>
+      <hr>
+      <div class="text-center">
+        <h3>Download History Logs</h3>
+        <form action="{{ url_for('download_history') }}" method="POST">
+          <div class="row justify-content-center">
+            <div class="col-md-2">
+              <label for="fromDate">From:</label>
+              <input type="date" id="fromDate" name="from_date" required>
+            </div>
+            <div class="col-md-2">
+              <label for="toDate">To: </label>
+              <input type="date" id="toDate" name="to_date" required>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-danger btn-primary">Download PDF</button>
+            </div>
+          </div>
+        </form>
+      </div>          
     </div>
   </div>
+
+  
 </body>
 
   <footer class="footer">

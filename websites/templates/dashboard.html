@@ -144,6 +144,10 @@ input:checked + .slider:after {
       width: 48%;
     }
 
+    .audio-analysis-sub-subcontainer {
+      width: 100%;
+    }
+
     .history-logs-container {
       width: 200%;
     }
@@ -340,10 +344,58 @@ input:checked + .slider:after {
         <div style="text-align: right; margin-left: auto;">
           <p style="color: #FAE02D; display: inline-block; vertical-align: middle; margin-right: 10px; font-size: 20px;">Device Status:</p>
           <label class="switch" style="display: inline-block; vertical-align: middle; margin-bottom: 10px;">
-            <input type="checkbox">
+            <input type="checkbox" id="deviceToggle">
             <span class="slider round"></span>
           </label>
         </div>
+        
+        <script>
+         // Get the device toggle element
+const deviceToggle = document.getElementById('deviceToggle');
+
+// Add event listener to the toggle switch
+deviceToggle.addEventListener('change', function() {
+if (!this.checked) { // Only display confirmation when turned off
+const confirmationMessage = "Are you sure you want to turn OFF the Chic Device?";
+if (confirm(confirmationMessage)) {
+// The user clicked "Yes"
+// Send request to toggle the device off using AJAX or other method
+const deviceState = 'off';
+toggleDevice(deviceState);
+} else {
+// The user clicked "No"
+// Restore the toggle switch to its previous state
+this.checked = !this.checked;
+}
+}
+});
+
+// Function to toggle the device state
+function toggleDevice(deviceState) {
+  // Send request to the server to toggle the device
+  // Replace the following code with your actual logic to control the device
+  const data = {
+    device_state: deviceState
+  };
+  fetch('/toggle-device', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.text())
+    .then(result => {
+      // Handle the response if needed
+      console.log(result);
+    })
+    .catch(error => {
+      // Handle any errors that occurred during the request
+      console.error(error);
+    });
+}
+        </script>
+        
     </div>
     
     <script>
@@ -363,16 +415,34 @@ input:checked + .slider:after {
     </script>
     
 
-    <div class="elevated-container waveform-container">
-      <!-- Add a button to start audio processing -->
-      <canvas id="waveformCanvas"></canvas>
-      <div class="col-md-12 text-center">
-        <p>Real-time Waveform</p>
-        <button class="btn btn-danger btn-sm" onclick="startAudioProcessing()">Start Audio Processing</button>
-        <button class="btn btn-danger btn-sm" onclick="endAudioProcessing()">End Audio Processing</button>
-
+    <div class="row">
+      <div class="col-md-6">
+        <div class="elevated-container waveform-container">
+          <div class="field">
+            <canvas id="waveformCanvas" width="500" height="200"></canvas>
+            <div class="col-md-12 text-center">
+              <p>Real-time Waveform of Cage 1</p>
+              <button class="btn btn-danger btn-sm" onclick="startAudioProcessing()">Start Audio Processing</button>
+              <button class="btn btn-danger btn-sm" onclick="endAudioProcessing()">End Audio Processing</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="{{ url_for('static', filename='waveform.js') }}"></script>
+      <div class="col-md-6">
+        <div class="elevated-container waveform-container">
+          <div class="field">
+            <canvas id="waveformCanvas"></canvas>
+            <div class="col-md-12 text-center">
+              <p>Real-time Waveform of Cage 2</p>
+              <button class="btn btn-danger btn-sm" onclick="startAudioProcessing()">Start Audio Processing</button>
+              <button class="btn btn-danger btn-sm" onclick="endAudioProcessing()">End Audio Processing</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    
     
     
     
@@ -382,9 +452,11 @@ input:checked + .slider:after {
           <div class="field">
             <div class="text-center">
               <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">Real-Time System Report</h3>
-         <p>Subtitle here</p>
+         <p>This section section provides an overview of the system's current status and provides real-time updates on various parameters and metrics.</p>
             </div>
             <hr>
+            <div class="elevated-container audio-analysis-sub-subcontainer">
+            <h3 style = "color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold ; margin-bottom: 5px;">Cage 1</h3>
             <div class="field-row">
               <span class="field-label">Current Chicken Status:</span>
               <span class="field-value" id="chickenStatus">Extremely Distressed</span>
@@ -397,8 +469,29 @@ input:checked + .slider:after {
               <span class="field-label">Amplitude:</span>
               <span class="field-value" id="amplitude"></span>
             </div>
+            </div>
+
+            <hr>
+            <div class="elevated-container audio-analysis-sub-subcontainer">
+            <h3 style = "color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold ; margin-bottom: 5px;">Cage 2</h3>
             <div class="field-row">
-              <span class="field-label">Text Message Status:</span>
+              <span class="field-label">Current Chicken Status:</span>
+              <span class="field-value" id="chickenStatus">Extremely Distressed</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Frequency:</span>
+              <span class="field-value" id="frequency"></span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Amplitude:</span>
+              <span class="field-value" id="amplitude"></span>
+          </div>
+          </div>
+              <hr>
+              
+              <div class="elevated-container audio-analysis-sub-subcontainer">
+            <div class="field-row">
+              <span class="field-label">SMS Notification Status:</span>
               <span class="field-value" id="textMessageStatus">Not Sent</span>
             </div>
             <div class="field-row">
@@ -408,14 +501,48 @@ input:checked + .slider:after {
             <button class="btn btn-danger btn-sm" onclick="window.location.href='{{ url_for('register') }}'">Register New Phone Number</button>            
           </div>
         </div>
+        </div>
       
 
         <div class="elevated-container audio-analysis-subcontainer">
-              <div class="field text-center">
-              <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">Real-Time Audio Analysis</h3>
-            <p>Subtitle here</p>  
+          <div class="field text-center">
+            <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">Real-Time Audio Analysis</h3>
+            <p>This section is for analyzing audio data as it is being captured or streamed in real-time, which involves extracting meaningful information from the audio signal.</p>
             <hr>
-            
+            <div class="elevated-container audio-analysis-sub-subcontainer">
+            <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">Cage 1</h3>
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <p>Mel-Spectrogram graph here</p>
+                <!-- Add the mel-spectrogram visualization code here -->
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <p>Chromagram graph here</p>
+                <!-- Add the chromagram visualization code here -->
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <p>Spectral Display graph here</p>
+                <!-- Add the spectral display visualization code here -->
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 text-end">
+                <button class="btn btn-danger btn-sm" onclick="window.location.href='{{ url_for('audio_analysis_details') }}'">See More Details</button>
+              </div>
+          </div>
+        </div>
+          <hr>
+        
+
+          
+          <div class="elevated-container audio-analysis-sub-subcontainer">
+        <h3 style = "color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold ; margin-bottom: 5px;">Cage 2</h3>
             <div class="row">
               <div class="col-md-12 text-center">
                 <p>Mel-Spectrogram graph here</p>
@@ -437,10 +564,17 @@ input:checked + .slider:after {
               </div>
               <hr>
             </div>
+            <div class="row">
+              <div class="col-md-12 text-end">
+                <button class="btn btn-danger btn-sm" onclick="window.location.href='{{ url_for('audio_analysis_details') }}'">See More Details</button>
+              </div>
+          </div>
           </div>
           </div>
         </div>
-          
+        </div>
+
+
 <hr>
         <div class="row">
           <div class="elevated-container history-logs-container">

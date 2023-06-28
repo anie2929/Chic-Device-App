@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Analysis Details</title>
+  <link rel="icon" href="https://example.com/path_to_logo_image_file.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Coiny&family=Nunito:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #fff url(https://static01.nyt.com/images/2023/03/03/multimedia/00dc-birdflu-01-bvmw/00dc-birdflu-01-bvmw-superJumbo-v2.jpg) center center/cover no-repeat;
+    }
+
+    .container {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    @keyframes textclip {
+      to {
+        background-position: 500% center;
+      }
+    }
+
+    .elevated-container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      margin-top: 20px;
+      margin-left: 10px;
+      margin-bottom: 20px;
+    }
+
+    .sidebar {
+      background-color: #CD0B2E;
+      width: 300px;
+      padding: 20px;
+      border-radius: 10px;
+      margin-right: 10px;
+    }
+
+    .sidebar a {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .sidebar-button {
+      display: block;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #FAE02D;
+      color: #CD0B2E;
+      text-decoration: none;
+      text-align: center;
+      border-radius: 5px;
+    }
+
+    .sidebar-button:hover {
+      background-color: white;
+    }
+
+    .colored-hr-sidebar {
+  background-color: #FAE02D;
+  height: 2px; 
+}
+
+    .main-content {
+      flex-grow: 1;
+    }
+
+
+    .subtitle {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #fae02d;
+      font-family: Nunito;
+      text-align: center;
+    }
+
+    .elevated-container {
+      background-color: rgba(255, 255, 255, 0.726);
+      border-radius: 10px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      width: 100px;
+      height: auto;
+    }
+
+    .animate-character {
+      text-transform: lowercase;
+      background-image: linear-gradient(-225deg, #ffec00 10%, #bc4c1c 19%, #ffe400 67%, #e02727 120%);
+      background-size: auto auto;
+      background-clip: border-box;
+      background-size: 79% auto;
+      color: #fff;
+      background-clip: text;
+      text-fill-color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textclip 2s linear infinite;
+      display: inline-block;
+      font-size: 20px;
+      font-family: "Coiny", cursive;
+    }
+
+    @keyframes textclip {
+      to {
+        background-position: 500% center;
+      }
+    }
+
+    .field-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-color: black;
+  margin-top: 20px;
+}
+
+.field-row {
+  border-bottom: 1px solid #ccc;
+  border-color: black;
+}
+
+.field-label,
+.field-value {
+  padding: 10px;
+  border-right: 1px solid #ccc;
+  border-color: black;
+}
+
+.field-value:last-child {
+  border-right: none;
+}
+
+
+    footer.footer {
+      background-color: transparent;
+      padding: 20px;
+    }
+
+    .footer-text {
+      color: white;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <div class="logo-container">
+        <img class="logo" src="{{ url_for('static', filename='chic_logo.png', _external=True) }}" alt="Logo">
+      </div>
+      <div class= "text-center">
+      <h3 class="animate-character text-center">Chic Device App</h3>
+      <h3 class="subtitle">Hear their Cries, Save their Lives!</h3>
+      <a href="#cage1" class="sidebar-button" onclick="showCageDetails('cage1')">Cage 1</a>
+      <a href="#cage2" class="sidebar-button" onclick="showCageDetails('cage2')">Cage 2</a>
+      <hr class="colored-hr-sidebar">
+        <p style="color: #fae02d; margin-right: 5px; font-size: 15px; font-style: italic;">
+          Current Date & Time: <span id="currentDateTime" style="color: #fae02d;"></span>
+        </p>
+    </div>
+</div>
+
+    <div class="main-content">
+        <div class="container">
+      <div class="elevated-container history-logs-container">
+        <nav class="navbar">
+            <form action="{{ url_for('dashboard') }}" method="GET" class="text-end me-2">
+                <button type="submit" class="btn btn-danger btn-primary">Back to Dashboard</button>
+              </form>
+              <div class="field text-center">
+                <h3 style="color: rgba(0, 0, 0, 0.767); font-family: San Francisco; font-weight: bold; margin-bottom: 5px;">Real-Time Audio Analysis</h3>
+            <p>This section is for analyzing audio data as it is being captured or streamed in real-time, which involves extracting meaningful information from the audio signal.</p> 
+        </div>
+        </nav>
+
+
+        <!-- Main content here -->
+        <div id="cage1-details" style="display: none;">
+            <hr>
+          <h2>Cage 1</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer consectetur, metus vel lobortis consectetur, lorem urna congue leo, eu sollicitudin lectus urna sit amet ipsum. Suspendisse ac neque a dolor congue pretium. Sed pharetra nunc a augue posuere cursus.</p>
+
+          <table class="field-table">
+            <tr class="field-row">
+              <td class="field-label">Microphone Number:</td>
+              <td class="field-value" id="microphoneNumber"></td>
+            </tr>
+            <tr class="field-row">
+              <td class="field-label">Current Chicken Status:</td>
+              <td class="field-value" id="chickenStatus">Extremely Distressed</td>
+            </tr>
+            <tr class="field-row">
+              <td class="field-label">Frequency:</td>
+              <td class="field-value" id="frequency"></td>
+            </tr>
+            <tr class="field-row">
+              <td class="field-label">Amplitude:</td>
+              <td class="field-value" id="amplitude"></td>
+            </tr>
+          </table>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="elevated-container waveform-container">
+                <div class="field">
+                  <canvas id="waveformCanvas"></canvas>
+                  <div class="col-md-12 text-center">
+                    <p>Waveform</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="elevated-container waveform-container">
+                <div class="field">
+                  <canvas id="mel-spectrogramCanvas"></canvas>
+                  <div class="col-md-12 text-center">
+                    <p>Mel-Spectogram</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="elevated-container waveform-container">
+                <div class="field">
+                  <canvas id="chromagramCanvas"></canvas>
+                  <div class="col-md-12 text-center">
+                    <p>Chromagram</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="elevated-container waveform-container">
+                <div class="field">
+                  <canvas id="spectraldisplayCanvas"></canvas>
+                  <div class="col-md-12 text-center">
+                    <p>Spectral Display</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <div id="cage2-details" style="display: none;">
+            <hr>
+          <h2>Cage 2</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer consectetur, metus vel lobortis consectetur, lorem urna congue leo, eu sollicitudin lectus urna sit amet ipsum. Suspendisse ac neque a dolor congue pretium. Sed pharetra nunc a augue posuere cursus.</p>
+          <table class="field-table">
+            <tr class="field-row">
+              <td class="field-label">Microphone Number:</td>
+              <td class="field-value" id="microphoneNumber"></td>
+            </tr>
+            <tr class="field-row">
+                <td class="field-label">Current Chicken Status:</td>
+                <td class="field-value" id="chickenStatus">Extremely Distressed</td>
+              </tr>
+            <tr class="field-row">
+              <td class="field-label">Frequency:</td>
+              <td class="field-value" id="frequency"></td>
+            </tr>
+            <tr class="field-row">
+              <td class="field-label">Amplitude:</td>
+              <td class="field-value" id="amplitude"></td>
+            </tr>
+          </table>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="elevated-container waveform-container">
+                <div class="field">
+                  <canvas id="waveformCanvas"></canvas>
+                  <div class="col-md-12 text-center">
+                    <p>Waveform</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="elevated-container waveform-container">
+                <div class="field">
+                  <canvas id="mel-spectrogramCanvas"></canvas>
+                  <div class="col-md-12 text-center">
+                    <p>Mel-Spectogram</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="elevated-container waveform-container">
+                <div class="field">
+                  <canvas id="chromagramCanvas"></canvas>
+                  <div class="col-md-12 text-center">
+                    <p>Chromagram</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="elevated-container waveform-container">
+                <div class="field">
+                  <canvas id="spectraldisplayCanvas"></canvas>
+                  <div class="col-md-12 text-center">
+                    <p>Spectral Display</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    function showCageDetails(cage) {
+      var cage1Details = document.getElementById('cage1-details');
+      var cage2Details = document.getElementById('cage2-details');
+
+      if (cage === 'cage1') {
+        cage1Details.style.display = 'block';
+        cage2Details.style.display = 'none';
+      } else if (cage === 'cage2') {
+        cage1Details.style.display = 'none';
+        cage2Details.style.display = 'block';
+      }
+    }
+  </script>
+
+<script>
+    // Function to update the current date and time
+    function updateDateTime() {
+      var currentDateTimeElement = document.getElementById("currentDateTime");
+      var currentDate = new Date().toLocaleDateString();
+      var currentTime = new Date().toLocaleTimeString();
+      currentDateTimeElement.textContent = currentDate + " " + currentTime;
+    }
+  
+    // Update the date and time initially
+    updateDateTime();
+  
+    // Update the date and time every second
+    setInterval(updateDateTime, 1000);
+  </script>
+
+
+  <footer class="footer">
+    <div class="container text-center">
+      <div class="row">
+        <div class="col-md-12">
+          <p class="footer-text">© 2023 Chic Web Application. All rights reserved.</p>
+          <p class="footer-text">This web application is for research purposes only. "Automated Bioacoustics: Recognition of Chicken Distress Vocalizations"</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
