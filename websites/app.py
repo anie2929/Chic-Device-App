@@ -1,20 +1,18 @@
-from flask import Flask, render_template, redirect, url_for, request, jsonify, send_file
+from flask import Flask, render_template, redirect, url_for, request, jsonify, send_file, Response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import logging
-import pyaudio
-import numpy as np
-import sounddevice as sd
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 from reportlab.platypus import Table
-from flask_socketio import SocketIO, emit
-
+from io import BytesIO
+import matplotlib.pyplot as plt
+import pyaudio
+import wave
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///chic_app.db'
 db = SQLAlchemy(app)
-audio_data = None
-socketio = SocketIO(app)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -24,19 +22,44 @@ formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-# Constants for audio settings
+# Constants
 CHUNK_SIZE = 1024
-FORMAT = pyaudio.paFloat32
+FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 
-pa = pyaudio.PyAudio()
-stream = pa.open(format=FORMAT,
-                 channels=CHANNELS,
-                 rate=RATE,
-                 input=True,
-                 frames_per_buffer=CHUNK_SIZE)
+# Global variables
+frames = []
 
+# Route to render the index page
+@app.route('/')
+def index():
+    return redirect(url_for('register'))
+
+def generate_audio():
+    global frames
+
+    p = pyaudio.PyAudio()
+
+    stream = p.open(format=FORMAT,
+                    channels=CHANNELS,
+                    rate=RATE,
+                    input=True,
+                    frames_per_buffer=CHUNK_SIZE)
+
+    while True:
+        data = stream.read(CHUNK_SIZE)
+        frames.append(data)
+
+        yield data
+
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+
+@app.route('/audio_feed')
+def audio_feed():
+    return Response(generate_audio(), mimetype='audio/x-wav')
 
 # Define the DistressLog model
 class DistressLog(db.Model):
@@ -47,16 +70,6 @@ class DistressLog(db.Model):
     duration = db.Column(db.REAL)
     phone_number = db.Column(db.Text)
     network_ssid = db.Column(db.Text)
-    frequency = db.Column(db.REAL)
-    amplitude = db.Column(db.REAL) 
-
-
-
-# Route to render the index page
-@app.route('/')
-def index():
-    return redirect(url_for('register'))
-
 
 # Route to render the History page after clicking the View All Logs button
 @app.route('/history_logs', methods=['GET', 'POST'])
@@ -100,11 +113,11 @@ def delete_log(log_id):
 
 # Helper function to generate the PDF report
 def generate_pdf(history):
-    pdf_filename = 'chic_report.pdf'
-    c = canvas.Canvas(pdf_filename)
+    pdf_buffer = BytesIO()
+    c = canvas.Canvas(pdf_buffer, pagesize=letter)
 
     # Define the header content
-    logo_path = "D:\Chic Device App\Chic-Device-App\websites\static\logo.jpg"
+    logo_path = "static/logo.jpg"
     title = "CHIC REPORT"
     current_date = datetime.now().strftime("%Y-%m-%d")
     from_date = history[0].date
@@ -113,7 +126,6 @@ def generate_pdf(history):
     separator_y = header_y - 160
 
     c.drawImage(logo_path, 50, header_y - 50, width=100, height=100)
-
 
     # Add text below the title
     text = "Recorded Logs from the Chic Device"
@@ -167,6 +179,8 @@ def generate_pdf(history):
 
     c.save()
 
+    pdf_buffer.seek(0)
+    return pdf_buffer.getvalue()
 
 # Route to download history logs as a PDF
 @app.route('/download_history', methods=['POST'])
@@ -258,6 +272,8 @@ def audio_analysis_details():
     return render_template('audio_analysis_details.html')
 
 
+
+
 # Route to clear all logs from the database
 @app.route('/clear-logs', methods=['POST'])
 def clear_logs():
@@ -267,75 +283,6 @@ def clear_logs():
 
     # Redirect to the dashboard page after clearing the logs
     return redirect(url_for('history_logs'))
-
-
-# Route to handle the start button click
-@app.route('/start-button', methods=['POST'])
-def start_button():
-    global audio_data
-    audio_data = []
-
-    def callback(in_data, frame_count, time_info, status):
-        audio_data.extend(np.frombuffer(in_data, dtype=np.float32))
-        return None, pyaudio.paContinue
-
-    stream.start_stream(callback=callback)
-    return 'Audio processing started'
-
-
-# Route to handle the end button click
-@app.route('/end-button', methods=['POST'])
-def end_button():
-    global audio_data
-    stream.stop_stream()
-    audio_data = np.array(audio_data)
-    return 'Audio processing ended'
-
-
-# Route to handle the audio data request
-@app.route('/get-audio-data')
-def get_audio_data():
-    global audio_data
-    if audio_data is None:
-        return jsonify({'audio_data': []})
-    else:
-        return jsonify({'audio_data': audio_data.tolist()})
-
-# Callback function to capture audio data
-def callback(indata, frames, time, status):
-    global audio_data
-    if status:
-        print('Error:', status)
-    audio_data = np.copy(indata)
-
-# Start capturing audio
-def start_audio_capture():
-    stream = sd.InputStream(callback=callback)
-    stream.start()
-
-# Stop capturing audio
-def stop_audio_capture():
-    stream.stop()
-
-# Start capturing audio on server startup
-start_audio_capture()
-
-# Event handler for WebSocket connection
-@socketio.on('connect')
-def handle_connect():
-    print('Client connected')
-
-# Event handler for WebSocket disconnection
-@socketio.on('disconnect')
-def handle_disconnect():
-    print('Client disconnected')
-
-# Event handler for receiving audio data
-# Replace this with the actual event that receives audio data from the client
-@socketio.on('audioData')
-def handle_audio_data(data):
-    # Process the received audio data as needed
-    print('Received audio data:', data)
-
+    
 if __name__ == '__main__':
-    socketio.run(app, host='127.0.0.1', port=5000)
+    app.run(debug=True)
